@@ -1,6 +1,6 @@
 # Website
 
-这个网站是使用 [Docusaurus](https://docusaurus.io/) 建立的，这是一个现代的静态网站生成器。
+TIP: 这个网站是使用 [Docusaurus](https://docusaurus.io/) 建立的，这是一个现代的静态网站生成器。
 
 ### Installation
 
