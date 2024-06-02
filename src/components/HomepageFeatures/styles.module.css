@@ -1,0 +1,51 @@
+.features {
+  display: flex;
+  justify-content: center; /* 中心对齐子元素 */
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.container {
+  max-width: calc(100% - 100px); /* 确保整个容器的宽度 */
+  padding: 0 20px; /* 增加容器的内边距 */
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; /* 防止自动换行 */
+}
+
+:global .col--4 {
+  --ifm-col-width: calc((4 / 12 * 100%) - 20px) !important;  /* 减去两边的总边距 */
+}
+
+.featureCard {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease;
+  overflow: hidden;
+  margin: 10px;
+  flex: 1 0 calc((100% / 3) - 20px); /* 调整基础宽度 */
+  min-width: 0; /* 防止卡片因内容过多而无法缩小 */
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+  transition: transform 0.5s ease;
+}
+
+.featureCard:hover {
+  border: 2px solid #007bff;
+}
+
+.featureCard:hover .featureSvg {
+  transform: rotate(360deg);
+}

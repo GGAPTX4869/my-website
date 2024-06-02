@@ -1,0 +1,152 @@
+.container {
+    position: fixed;
+    bottom: 140px;
+    right: 20px;
+    width: 35%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggleButton {
+    width: 70px !important;
+    height: 70px;
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    cursor: pointer;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        border: 2px solid #ff4d4f;
+    }
+}
+
+.chatBox {
+    display: flex;
+    flex-direction: column;
+    height: 650px;
+}
+
+.chatHeader {
+    padding: 10px;
+    background: #ff4d4f;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #F8FAFC;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.avatar {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    padding: 1px;
+    border: 1px solid #ff4d4f;
+}
+
+.text {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 15px;
+    color: #030616;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+}
+
+.left {
+    flex-direction: row;
+}
+
+.right {
+    flex-direction: row-reverse;
+}
+
+.left .text {
+    background-color: #ffffff;
+    color: #030616;
+    margin-left: 10px;
+}
+
+.right .text {
+    background: #ffffff;
+    color: #030616;
+    margin-right: 10px;
+}
+
+.inputBox {
+    display: flex;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    background: white;
+    align-items: center;
+    position: relative;
+
+    .ant-input {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
+
+    .emojiPicker {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        z-index: 100;
+        width: 100% !important;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .emojiButton {
+        background-color: #ffffff !important;
+        border: none;
+        cursor: pointer;
+    }
+
+    .sendButton {
+        background-color: #ff4d4f;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 5px;
+
+        &:hover {
+            background-color: white;
+            border: 2px solid #ff4d4f;
+        }
+    }
+
+}

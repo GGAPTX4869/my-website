@@ -1,0 +1,103 @@
+# SpringAI - 基本概述
+
+## 人工智能简介
+
+A system is ability to correctly interpret external data, to learn from such data, and to use those learnings to achieve specific goals and tasks through flexible adaptation.
+
+> 翻译：系统正确解释外部数据的能力，从这些数据中学习的能力，以及通过灵活的适应利用这些学习来实现特定目标和任务的能力。
+
+人工智能的发展经过了几个重要阶段，从早期的概念和实验室研究，到如今的广泛应用和商业化，AI 已成为科技领域的一个重要分支。起初，人们对于机器能否模拟人类智能持怀疑态度，但随着技术的不断进步，这些早期的概念如今已变为现实。
+
+在20世纪50年代和60年代，人工智能作为一个学术概念开始形成，那时的研究者设想通过编程来模拟人类思维。然而，在70年代，由于技术和理论的局限，人工智能进入了一个相对沉寂的时期。到了80年代，随着计算机技术的发展，尤其是专家系统的出现，人工智能开始应用于商业和工业领域，从而得到了复苏。
+
+进入21世纪，特别是2010年之后，随着大数据和计算能力的飞速发展，加之机器学习算法的突破，AI开始进入一个全新的发展时期。特别是深度学习的兴起，使得机器能够自我学习和适应，大大提高了AI的能力。从图像识别到自然语言处理，人工智能在许多领域都取得了突破性进展。
+
+到了2020年代，AI 的发展更加迅猛。2022年，OpenAI 推出的 ChatGPT 让人工智能走进了普通人的视野，让人们看到了 AI 在交流、创作和多种任务执行上的潜力。随后，2023年 OpenAI 发布的 ChatGPT 4.0 版本进一步提升了这种技术的性能和应用范围。
+
+与此同时，中国的科技公司也在 AI 领域取得了显著成就。百度的文心一言（ERNIE Bot）、华为的盘古大模型、京东的言犀大模型等，都是基于大规模预训练模型的人工智能产品，它们可以理解和生成自然语言，用于交互、搜索和其他多种应用。
+
+## 大模型简介
+
+大模型，是指具有大规模参数和复杂计算结构的机器学习模型。这些模型通常由深度神经网络构建而成，拥有数十亿甚至数千亿个参数。其设计目的在于提高模型的表达能力和预测性能，以应对更加复杂的任务和数据。
+
+大模型的训练和应用确实涉及到一系列技术挑战和资源要求。这些模型能够进行复杂的任务处理，比如自然语言理解、图像识别、语音识别等等。为了让这些模型达到高效的性能水平，研究人员和工程师们需要大量的数据来训练它们，以及强大的硬件资源来支持这一训练过程。
+
+大模型背后的高性能计算资源是非常重要的，因为它们可以处理和分析的数据量成指数级增长。为了训练它们，需要有一个能够支持大量并行计算的系统。GPU 因其并行处理能力在深度学习训练中变得非常流行，因为它们可以显著提高训练速度。
+
+除了硬件之外，软件工具和框架也是训练大模型不可或缺的一部分。深度学习框架如 TensorFlow 和 PyTorch 提供了构建模型的块和自动化梯度计算的能力，而分布式训练框架有助于利用多个处理器或服务器来并行化训练过程，从而缩短训练时间。
+
+大模型的训练不仅资源密集型，而且能耗也非常高。这是因为 GPU 和其他计算资源在进行复杂计算时会消耗大量电力。随着 AI 模型变得越来越大，如何减少它们对环境的影响成了一个重要的研究课题。
+
+尽管大模型的开发和运营成本高昂，但它们在提供精准的分析、高效的自动化解决方案以及增强决策支持系统方面具有巨大潜力。这些模型正在变革医疗、金融、交通、娱乐等多个领域，有助于推动人类社会的技术进步。
+
+## Spring AI 简介
+
+### 什么是 Spring AI？
+
+> 官网：[https://spring.io/projects/spring-ai](https://spring.io/projects/spring-ai)
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-073501.png)
+
+官方介绍：⬇️
+
+Spring AI is an application framework for AI engineering. Its goal is to apply to the AI domain Spring ecosystem design principles such as portability and modular design and promote using POJOs as the building blocks of an application to the AI domain.
+
+Spring AI 是一个 AI 工程领域的应用程序框架，它的目标是将 Spring 生态系统的设计原则应用于人工智能领域，比如 Spring 生态系统的可移植性和模块化设计，并推广使用 POJO 来构建人工智能领域应用程序。**Spring AI 并不是要构建一个自己的 AI 大模型，而是让你对接各种 AI 大模型**。
+
+### Spring AI 的特点
+
+Spring AI 提供的 API 支持跨人工智能提供商的 **聊天，文本到图像，和嵌入模型**等，同时支持**同步和流 API** 选项。
+
+1. Chat Models（聊天模型）：
+   * OpenAI
+   * Azure Open AI
+   * Amazon Bedrock
+   * Cohere's Command
+   * AI21 Labs' Jurassic-2
+   * Meta's LLama 2
+   * Amazon's Titan
+   * Google Vertex AI Palm
+   * Google Gemini
+   * HuggingFace - access thousands of models, including those from Meta such as Llama2
+   * Ollama - run AI models on your local machine
+   * MistralAI
+2. Text-to-image Models（文本到图像模型）：
+   * OpenAI with DALL-E
+   * StabilityAI
+3. Transcription (audio to text) Models（转录（音频到文本）模型）：
+   * OpenAI
+4. Embedding Models（嵌入模型）：
+   * OpenAI
+   * Azure OpenAI
+   * Ollama
+   * ONNX
+   * PostgresML
+   * Bedrock Cohere
+   * Bedrock Titan
+   * Google VertexAI
+   * Mistal AI
+5. Vector Store API 提供了跨不同提供商的可移植性，其特点是提供了一种新颖的类似 SQL 的元数据过滤 API，以保持可移植性。
+6. 矢量数据库：
+   * Azure Vector Search
+   * Chroma
+   * Milvus
+   * Neo4j
+   * PostgreSQL/PGVector
+   * PineCone
+   * Redis
+   * Weaviate
+   * Qdrant
+7. 用于 AI 模型和矢量存储的 Spring Boot 自动配置和启动器；（xxxx-spring-ai-starter）
+8. 函数调用，您可以声明 `java.util.Function` 的 OpenAI 模型的函数实现，用于其提示响应。如果在应用程序上下文中注册为@Bean，则可以直接将这些函数作为对象提供，或者引用它们的名称。这一功能最大限度地减少了不必要的代码，并使人工智能模型能够要求更多信息来完成其响应；
+9. 支持的模型有：
+   * OpenAI
+   * Azure OpenAI
+   * VertexAI
+   * Mistral AI
+10. 用于数据工程的 ETL 框架：
+    * ETL 框架的核心功能是使用 Vector Store 促进文档向模型提供者的传输。ETL 框架基于 Java 函数式编程概念，可帮助您将多个步骤链接在一起；
+    * 支持阅读各种格式的文档，包括 PDF、JSON 等；
+    * 该框架允许数据操作以满足您的需求。这通常包括拆分文档以遵守上下文窗口限制，并使用关键字增强它们以提高文档检索效率；
+    * 最后，处理后的文档存储在矢量数据库中，以便将来检索；
+11. 广泛的参考文档、示例应用程序和研讨会/课程材料；
+    * 未来的版本将在此基础上提供对其他人工智能模型的访问。例如，谷歌刚刚发布的 Gemini 多模式模态，一个评估人工智能应用程序有效性的框架，更方便的 API，以及帮助解决 “查询/汇总我的文档” 用例的功能。有关即将发布的版本的详细信息，请查看官方 [GitHub](https://github.com/spring-projects/spring-ai)；

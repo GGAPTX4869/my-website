@@ -1,0 +1,454 @@
+# SpringAI - 基本聊天
+
+## 开发环境
+
+本次演示的基本环境准备如下：
+
+| 序号           | 版本                                                         |
+| -------------- | ------------------------------------------------------------ |
+| JDK            | 17 +                                                         |
+| SpringBoot     | 3.x +                                                        |
+| Maven          | 3.9                                                          |
+| VPN            | 至少能够访问 OpenAI 网站 [https://openai.com/](https://openai.com/) |
+| OpenAI API Key | 注册账号或者淘宝购买                                         |
+
+## 新建工程
+
+这里我新建一个 boot-ai 作为父工程，删除不必要的文件，保留 pom.xml 即可：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-074730.png)
+
+在父 pom.xml 文件中修改打包方式为 pom，并加入必要的依赖。
+
+Spring AI 的版本我们采用了最新的 1.0.0-SNAPSHOT：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-075037.png)
+
+首先要使用里程碑（Milestone）和快照（Snapshot）版本，需要在构建文件中添加对 Spring Milestone 和/或 Spring Snapshot 资源库的引用：
+
+```xml showLineNumbers
+  <repositories>
+    <!-- 里程碑（Milestone）-->
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+		<!-- 快照（Snapshot）-->
+    <repository>
+      <id>spring-snapshots</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+```
+
+Spring AI BOM 声明了特定版本的 Spring AI 所使用的所有依赖关系的推荐版本。在应用程序的构建脚本中使用 BOM 可以避免自己指定和维护依赖版本。相反，使用的 BOM 版本将决定所使用的依赖版本。它还能确保您默认使用的是受支持且经过测试的依赖关系版本，除非你选择覆盖它们。
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-bom</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+最终的父 pom.xml 如下：
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>cn.javgo</groupId>
+    <artifactId>boot-ai</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>boot-ai</name>
+    <url>http://maven.apache.org</url>
+    <modules>
+        <module>spring-ai-chat</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17</java.version>
+        <spring-ai.version>1.0.0-SNAPSHOT</spring-ai.version>
+    </properties>
+
+    <!-- 配置本项目的仓库：因为 Maven 中心仓库还没有更新 Spring AI 的 jar 包 -->
+    <repositories>
+        <!-- 里程碑（Milestone）-->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!-- 快照（Snapshot）-->
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 相当于是继承一个父项目：spring-ai-bom 父项目 -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+再创建一个子模块 spring-ai-chat。用来演示基本聊天功能：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-081326.png)
+
+只需要在 spring-ai-chat 模块的 pom.xml 文件中引入 spring-ai-openai-spring-boot-starter 即可：
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.javgo</groupId>
+        <artifactId>boot-ai</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>spring-ai-chat</artifactId>
+    <packaging>jar</packaging>
+
+    <name>spring-ai-chat</name>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+## 添加配置
+
+在 spring-ai-chat 子模块的 application.yml 配置文件中配置 Spring AI 的基本属性：
+
+```yaml
+server:
+  port: 8081
+
+spring:
+  application:
+    name: chat-service
+  ai:
+    openai:
+      # 购买的 OpenAI API Key
+      api-key: ${OPENAI_API_KEY}
+      # 配置 OpenAI 的官方地址（https://api.openai.com），如果是中转的则需要配置中转地址
+      base-url: https://apikeyplus.com
+```
+
+> TIP：上面的 OpenAI API Key 我配置到了本地环境变量中，这也是一种推荐的做法来保证 API Key 不会泄漏。测试时直接填写明文也可以。
+
+## 源码分析
+
+在将 `spring-ai-openai-spring-boot-starter` 集成到 Spring Boot 应用中后，框架自动配置了一组 AI 客户端，使我们能够轻松地在应用中加入智能对话等功能。其中最基本的聊天功能由 `OpenAiChatClient` 提供。我们可以在 `OpenAiAutoConfiguration` 的配置中看到详细的自动装配过程。
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-084149.png)
+
+`ModelClient` 是所有 AI 客户端接口的顶层抽象，定义了一个关键的方法 `call`，它负责处理模型请求和响应：
+
+```java title="ModelClient"
+package org.springframework.ai.model;
+
+public interface ModelClient<TReq extends ModelRequest<?>, TRes extends ModelResponse<?>> {
+    TRes call(TReq request);
+}
+```
+
+这个泛型接口允许传入特定的请求和响应类型，增加了代码的通用性和复用性。
+
+下一级的 `ChatClient` 接口继承自 `ModelClient`，它重载了 `call` 方法以提供更具针对性的聊天功能：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-090357.png)
+
+在 `ChatClient` 中，具体实现了几个 `call` 方法：
+
+1. `call(String message)`：接受一个字符串输入，返回字符串输出。
+2. `call(Message... messages)`：接受一个或多个 `Message` 输入，返回字符串输出。
+
+```Java
+default String call(String message) {
+    Prompt prompt = new Prompt(new UserMessage(message));
+    Generation generation = this.call(prompt).getResult();
+    return generation != null ? generation.getOutput().getContent() : "";
+}
+```
+
+```java
+default String call(Message... messages) {
+    Prompt prompt = new Prompt(Arrays.asList(messages));
+    Generation generation = this.call(prompt).getResult();
+    return generation != null ? generation.getOutput().getContent() : "";
+}
+```
+
+通过观察上述方法实现，我们可以发现一个共同的模式：无论是单个消息还是多个消息，内部逻辑都是首先将输入包装为 `Prompt` 对象，然后调用 `call(Prompt prompt)` 方法。`call(Prompt prompt)` 方法返回一个 `ChatResponse` 对象，该对象包含 `Generation` 类型的结果。结果通过 `getOutput()` 方法获取，最终通过 `getContent()` 方法提取出聊天的响应内容。
+
+```java
+ChatResponse call(Prompt prompt);
+```
+
+类结构图如下：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-091122.png)
+
+除了 `call` 方法，还有另一种调用方式就是 “流” 的形式。让我们首先理解 `Flux` 类型。`Flux` 是 Project Reactor 库中的一个响应式流发布者，它可以发出0到N个元素，并随后完成或错误。在 Spring AI 中，`Flux` 被用来模拟流式的聊天响应，它允许我们像打字机一样逐渐展示聊天内容，而不必等待整个响应一次性返回。
+
+流式聊天功能使得我们的应用能够提供更加动态和互动的用户体验，就像在使用 ChatGPT 时所体验到的那样。在 Spring Boot 应用中，我们通过实现 `StreamingChatClient` 接口来提供这种能力。
+
+`StreamingChatClient` 接口扩展自 `StreamingModelClient`，它定义了如何以流的形式处理聊天功能：
+
+```java
+@FunctionalInterface
+public interface StreamingChatClient extends StreamingModelClient<Prompt, ChatResponse> {
+    default Flux<String> stream(String message) {
+        Prompt prompt = new Prompt(message);
+        return this.stream(prompt).map((response) -> {
+            return response.getResult() != null && response.getResult().getOutput() != null && response.getResult().getOutput().getContent() != null ? response.getResult().getOutput().getContent() : "";
+        });
+    }
+
+    default Flux<String> stream(Message... messages) {
+        Prompt prompt = new Prompt(Arrays.asList(messages));
+        return this.stream(prompt).map((response) -> {
+            return response.getResult() != null && response.getResult().getOutput() != null && response.getResult().getOutput().getContent() != null ? response.getResult().getOutput().getContent() : "";
+        });
+    }
+
+    Flux<ChatResponse> stream(Prompt prompt);
+}
+```
+
+可以看到，主要提供了两个默认方法 `stream(String message)` 和 `stream(Message... messages)`，它们都调用了一个私有方法 `streamResponseContent` 来避免代码重复。这个私有方法通过流式处理，逐步返回聊天的响应内容，同时使用了 `filter` 和 `map` 操作来确保不会处理任何空的响应。
+
+> TIP：这一部分内容较多也很花哨，感兴趣的可以阅读官方文档。（[Class Flux](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html)）
+
+## 代码编写
+
+OK，简单了解后使用起来就非常简单了，我们这里快速创建一个 Controller 编写两个方法来实现基本的聊天功能：
+
+```java
+package cn.javgo.ai.controller;
+
+import com.knuddels.jtokkit.api.ModelType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.ai.chat.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.openai.OpenAiChatClient;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
+
+/**
+ * Description: Chat Controller
+ *
+ * @author javgo
+ * @date 2024/05/01
+ * @version: 1.0
+ */
+@RequiredArgsConstructor
+@RestController
+@RequestMapping(value = "/ai")
+public class ChatController {
+
+    private final OpenAiChatClient openAiChatClient;
+
+    /**
+     * 基本请求方法
+     */
+    @RequestMapping(value = "/chat")
+    public String chat(@RequestParam(value = "msg") String msg) {
+        return openAiChatClient.call(msg);
+    }
+
+    /**
+     * 等价于上面的方法
+     */
+    @RequestMapping(value = "/chatV2")
+    public String chatV2(@RequestParam(value = "msg") String msg) {
+        ChatResponse chatResponse = openAiChatClient.call(new Prompt(msg));
+        return chatResponse.getResult().getOutput().getContent();
+    }
+
+    /**
+     * 定制化更高的方法
+     */
+    @RequestMapping(value = "/chatV3")
+    public String chatV3(@RequestParam(value = "msg") String msg) {
+        // 构建 OpenAiChat 选项，进行更加细粒度地定制
+        OpenAiChatOptions openAiChatOptions = OpenAiChatOptions.builder()
+                // OpenAI 聊天模型版本，默认 gpt-3.5-turbo，也可以配置 gpt-4-32k 后缀 32k 代表参数量
+                .withModel(ModelType.GPT_3_5_TURBO.getName())
+                // 温度，温度越高回答更具创新性但是准确率也会下降，温度越低回答的准确率越好，需要调整一个合适的值
+                .withTemperature(0.4F)
+                .build();
+
+        // 接口调用并提取内容
+        ChatResponse chatResponse = openAiChatClient.call(new Prompt(msg, openAiChatOptions));
+        return chatResponse.getResult().getOutput().getContent();
+    }
+
+    /**
+     * 流
+     */
+    @RequestMapping(value = "/chatV4")
+    public Flux<String> chatV4(@RequestParam(value = "msg") String msg) {
+        Flux<String> stringFlux = openAiChatClient.stream(msg);
+        return stringFlux;
+    }
+
+    /**
+     * 流（定制化更高）
+     */
+    @RequestMapping(value = "/chatV5")
+    public Mono<List<ChatResponse>> chatV5(@RequestParam(value = "msg") String msg) {
+        // 构建 OpenAiChat 选项，进行更加细粒度地定制
+        OpenAiChatOptions openAiChatOptions = OpenAiChatOptions.builder()
+                // OpenAI 聊天模型版本，默认 gpt-3.5-turbo，也可以配置 gpt-4-32k 后缀 32k 代表参数量
+                .withModel(ModelType.GPT_3_5_TURBO.getName())
+                // 温度，温度越高回答更具创新性但是准确率也会下降，温度越低回答的准确率越好，需要调整一个合适的值
+                .withTemperature(0.4F)
+                .build();
+
+        // 接口调用获取数据
+        Flux<ChatResponse> chatResponseFlux = openAiChatClient.stream(new Prompt(msg, openAiChatOptions));
+        // 返回数据的序列，一序列的数据，一个一个的数据返回
+        return chatResponseFlux.collectList();
+    }
+}
+```
+
+准备启动类：
+
+```java
+package cn.javgo.ai;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Description: 程序入口
+ *
+ * @author javgo
+ * @date 2024/05/01
+ * @version: 1.0
+ */
+@SpringBootApplication
+public class ChatApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ChatApplication.class, args);
+    }
+}
+```
+
+## 结果测试
+
+启动程序后调用 API 进行测试。
+
+测试基本聊天接口：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-085357.png)
+
+测试定制化更高的 V3 接口：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-092351.png)
+
+测试流式接口：
+
+![](https://javgo-images.oss-cn-beijing.aliyuncs.com/2024-05-01-094444.png)
+

@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.menu {
+  margin-top: 20px;
+  width: 200px;
+  text-align: center;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.card {
+  transition: box-shadow .3s;
+  background-color: #ffffff;
+  height: 200px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
+
+  &:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    border: 1px solid #1677ff;
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  object-fit: fill;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}

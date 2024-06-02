@@ -1,0 +1,86 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+@media screen and (max-width: 996px) {
+    .heroBanner {
+        padding: 2rem;
+    }
+}
+
+.top-tips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    fontWeight: bold;
+    textAlign: center;
+    padding: 1.25rem;
+    color: white;
+    fontSize: 1.05rem;
+    backgroundImage: linear-gradient(90deg, #3b82f6, #ef4444);
+}
+
+:global .hero__title {
+    marginTop: 4rem;
+    fontSize: 3rem;
+    color: #1c1e21;
+    fontWeight: 700;
+    lineHeight: 1;
+}
+
+:global .hero__subtitle {
+    color: rgba(71, 71, 71, 1);
+}
+
+:global .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+:global .button.button--secondary {
+    color: white;
+}
+
+:global .button {
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    text-align: center;
+    margin: 0 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    width: 20%;
+    height: 60px;
+    border-radius: 18px;
+}
+
+:global .button1 {
+    background-color: #1677ff;
+}
+
+:global .button1:hover {
+    background-color: #1ec1fc;
+}
+
+:global .button2 {
+    background-color: #ff4d4e;
+}
+
+:global .button2:hover {
+    background-color: #fc5ec5;
+}
+
+:global .button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /*border-color: #007bff;*/
+}
